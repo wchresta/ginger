@@ -61,7 +61,7 @@ import qualified Data.Aeson as JSON
 import qualified Data.HashMap.Strict as HashMap
 import Data.HashMap.Strict (HashMap)
 import qualified Data.Vector as Vector
-import Control.Monad ( forM, mapM )
+import Control.Monad ((<=<), forM, mapM)
 import Control.Monad.Trans (MonadTrans, lift)
 import Data.Default (Default, def)
 import Text.Printf
@@ -779,6 +779,9 @@ instance FromGVal m Int where
 
 instance FromGVal m Scientific where
     fromGVal = asNumber
+
+instance FromGVal m Integer where
+    fromGVal = Prelude.either (const Nothing) Just . floatingOrInteger <=< asNumber
 
 instance FromGVal m Text where
     fromGVal = Just . asText
