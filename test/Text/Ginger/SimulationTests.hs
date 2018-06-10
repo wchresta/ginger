@@ -132,6 +132,38 @@ simulationTests = testGroup "Simulation"
         , testCase "multi-level mixed" $ mkTestHtml
             [] [] "{{ { \"foo\": { \"oink\": \"nope\", \"baz\": { \"boop\": [], \"quux\": \"bar\" }}}.foo.baz[\"quux\"] }}" "bar"
         ]
+    , testGroup "Unary operators"
+        [ testGroup "\"not\""
+            [ testCase "not true" $ mkTestHtml
+                [] [] "{{ not true }}" ""
+            , testCase "not false" $ mkTestHtml
+                [] [] "{{ not false }}" "1"
+            , testCase "not after filter" $ mkTestHtml
+                [] [] "{{ not \" \"|int }}" "1"
+            , testCase "not before and" $ mkTestHtml
+                [] [] "{{ not false and false }}" ""
+            ]
+        , testGroup "\"+\""
+            [ testCase "+22" $ mkTestHtml
+                [] [] "{{ +22 }}" "22"
+            , testCase "+ 22" $ mkTestHtml
+                [] [] "{{ + 22 }}" "22"
+            , testCase "+(22)" $ mkTestHtml
+                [] [] "{{ +(22) }}" "22"
+            , testCase "+ (22)" $ mkTestHtml
+                [] [] "{{ + (22) }}" "22"
+            ]
+        , testGroup "\"-\""
+            [ testCase "-22" $ mkTestHtml
+                [] [] "{{ -22 }}" "-22"
+            , testCase "- 22" $ mkTestHtml
+                [] [] "{{ - 22 }}" "-22"
+            , testCase "-(22)" $ mkTestHtml
+                [] [] "{{ -(22) }}" "-22"
+            , testCase "- (22)" $ mkTestHtml
+                [] [] "{{ - (22) }}" "-22"
+            ]
+        ]
     , testGroup "Function calls"
         -- In order to make sure the correct function is called, we write one
         -- that stores its argument in an IORef that it closes over, thus
